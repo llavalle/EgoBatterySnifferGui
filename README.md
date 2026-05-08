@@ -16,10 +16,18 @@ source .venv/Scripts/activate         # Git Bash on Windows
 pip install -r requirements.txt
 ```
 
-## Phase 1 (current): CLI dashboard
+## Phase 2 (current): minimal GUI
 
-Read NDJSON from the firmware over serial, maintain state, print a
-one-line dashboard each second:
+```sh
+python -m ego_gui                            # launch the GUI
+```
+
+Port dropdown auto-selects boards matching a known sniffer VID/PID
+(currently `2341:0042` - Arduino-LLC Mega 2560), Connect/Disconnect,
+scrolling NDJSON debug log, RX activity LED, and a persistent header
+showing battery identity + current mode.
+
+## CLI (Phase 1, still useful headless)
 
 ```sh
 python -m ego_gui.main                       # auto-detect the Mega by VID/PID
@@ -29,9 +37,8 @@ python -m ego_gui.main --replay capture.ndjson
 ```
 
 If no `--port` (or `--replay`) is given, the CLI scans serial ports for a
-known sniffer VID/PID (currently `2341:0042` - Arduino-LLC Mega 2560) and
-opens the match. Pass `--port` to override or to use a clone with a
-different VID/PID.
+known sniffer VID/PID and opens the match. Pass `--port` to override or
+to use a clone with a different VID/PID.
 
 `--replay` reads a saved NDJSON file instead of opening a serial port -
 useful for offline testing and protocol-decoder development.
