@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """NDJSON event parser for the EGO sniffer firmware.
 
 The firmware emits one self-describing JSON object per line. See guiplan.md

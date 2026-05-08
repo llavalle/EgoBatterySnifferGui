@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Cross-platform "keep the system awake" hooks.
 
 Currently implements Windows via SetThreadExecutionState. macOS / Linux

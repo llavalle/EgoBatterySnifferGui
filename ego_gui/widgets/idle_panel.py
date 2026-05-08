@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Phase 3c: idle / unknown panel.
 
 Shows the battery's identity, the ID-heartbeat cadence, and the time

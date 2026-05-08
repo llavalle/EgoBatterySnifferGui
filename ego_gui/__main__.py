@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """`python -m ego_gui` launches the GUI."""
 
 from .gui import main

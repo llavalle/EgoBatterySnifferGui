@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Scrolling NDJSON log. Capped at a fixed number of blocks so memory
 stays bounded across long sessions.
 """

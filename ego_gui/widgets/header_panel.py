@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Persistent header showing battery identity + current mode.
 
 Updated each tick from a BatteryState snapshot. Stays empty/neutral until

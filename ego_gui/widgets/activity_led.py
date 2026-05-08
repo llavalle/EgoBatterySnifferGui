@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Small circular LED that lights up briefly on activity."""
 
 from __future__ import annotations

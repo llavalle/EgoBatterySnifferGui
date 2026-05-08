@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Phase 3b: charging panel.
 
 Shows SOC bar, target (charger setpoints) vs actual delivered current,
@@ -51,6 +52,19 @@ class ChargePanel(QWidget):
         super().__init__(parent)
         mono = _mono(11)
         mono_small = _mono(10)
+
+        # ---- "Charge ready" banner (visible only after CHGFUL) ----
+        # CHGFUL fires when the BMS considers the battery functionally
+        # ready to use; the charger may still taper for ~minute via
+        # DECCUR/OUTCUR before the actual session ends.
+        self.full_banner = QLabel("Battery ready — finishing charge")
+        self.full_banner.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.full_banner.setStyleSheet(
+            "background-color: #1b5e20; color: white; "
+            "font-weight: bold; font-size: 14pt; "
+            "padding: 8px; border-radius: 4px;"
+        )
+        self.full_banner.setVisible(False)
 
         # ---- Row 1: SOC bar + charger ID ----
         soc_row = QHBoxLayout()
@@ -119,6 +133,7 @@ class ChargePanel(QWidget):
 
         # ---- Compose ----
         layout = QVBoxLayout(self)
+        layout.addWidget(self.full_banner)
         layout.addLayout(soc_row)
         layout.addSpacing(8)
         layout.addLayout(readouts)
@@ -129,10 +144,19 @@ class ChargePanel(QWidget):
         layout.addWidget(self.chart, 1)
 
     def update_from(self, s: BatteryState) -> None:
-        # SOC
-        if s.soc_pct is not None:
-            self.soc_bar.setValue(s.soc_pct)
-            self.soc_bar.setFormat(f"{s.soc_pct}%")
+        # Full banner
+        self.full_banner.setVisible(s.battery_full)
+
+        # SOC: clamp to 100% for display. The BMS reports raw values up
+        # to 117% during absorption, which looks broken in the UI even
+        # though it's literally what the protocol carries.
+        if s.battery_full and s.soc_pct is None:
+            self.soc_bar.setValue(100)
+            self.soc_bar.setFormat("100%")
+        elif s.soc_pct is not None:
+            display_pct = min(s.soc_pct, 100)
+            self.soc_bar.setValue(display_pct)
+            self.soc_bar.setFormat(f"{display_pct}%")
         else:
             self.soc_bar.setValue(0)
             self.soc_bar.setFormat("--")
@@ -168,10 +192,17 @@ class ChargePanel(QWidget):
             self.output_label.setText("DISABLED")
             self.output_label.setStyleSheet("color: #d32f2f; font-weight: bold;")
 
-        # Deltas / fan
-        self.add_cur_label.setText(
-            f"+{s.add_cur}" if s.add_cur is not None else "--"
-        )
+        # Deltas / fan -- show the most recent signed delta so the panel
+        # makes it obvious whether the BMS is asking for more current
+        # (ADDCUR, +N) or tapering (DECCUR, -N).
+        if s.delta_cur is None:
+            self.add_cur_label.setText("--")
+        elif s.delta_cur > 0:
+            self.add_cur_label.setText(f"+{s.delta_cur}")
+        elif s.delta_cur < 0:
+            self.add_cur_label.setText(f"{s.delta_cur}")  # already has '-'
+        else:
+            self.add_cur_label.setText("0")
         self.fan_req_label.setText(
             str(s.fan_req) if s.fan_req is not None else "--"
         )

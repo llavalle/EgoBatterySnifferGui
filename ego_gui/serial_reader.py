@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Background serial reader.
 
 Runs pyserial.readline() on a Qt-managed thread and pushes both raw lines

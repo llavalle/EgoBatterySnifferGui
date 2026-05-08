@@ -42,3 +42,9 @@ to use a clone with a different VID/PID.
 
 `--replay` reads a saved NDJSON file instead of opening a serial port -
 useful for offline testing and protocol-decoder development.
+
+## License
+
+GNU General Public License v3.0 or later (`GPL-3.0-or-later`). See
+[LICENSE](LICENSE) for the full text. Source files carry the SPDX
+identifier so license scanners pick it up automatically.

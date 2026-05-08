@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """BatteryState model + vocabulary-based mode detection.
 
 The state is the consumer's accumulated view of what the battery and its
@@ -13,15 +14,21 @@ from dataclasses import dataclass, field
 from typing import Any, Literal
 
 
-# Vocabulary classification for mode detection (per guiplan.md)
+# Vocabulary classification for mode detection (per guiplan.md, plus the
+# full-battery end-of-session commands documented in the firmware README).
 CHARGE_CMDS = frozenset({
     "EVACHG", "GETCG1", "OUTCG1", "GET_VM", "OUT_VM", "GET_CM", "OUT_CM",
-    "EN_OUT", "CHGING", "ADDCUR", "OUTCUR", "CHGPCT", "FAN_ON",
+    "EN_OUT", "CHGING", "ADDCUR", "DECCUR", "OUTCUR", "CHGPCT", "FAN_ON",
+    "FANOFF", "DISOUT", "CHGFUL", "SLEEP_",
 })
 
 DISCHARGE_CMDS = frozenset({
     "RD_VOL", "RD_TMP", "RD_SPC", "RD_CAP", "RD_FSH",
 })
+
+# Charging vocabulary that classifies the session, including the
+# end-of-session sequence seen on a battery that's already full.
+
 
 # These appear in both modes (or are mode-neutral); they don't classify on
 # their own but their presence in isolation indicates idle.
@@ -63,11 +70,19 @@ class BatteryState:
     i_out_ca: int | None = None
     cur: int | None = None
     add_cur: int | None = None
+    dec_cur: int | None = None
+    # Most recent battery delta-current request, signed: + from ADDCUR
+    # (ramp up), - from DECCUR (taper). Whichever was seen most recently
+    # wins.
+    delta_cur: int | None = None
     soc_pct: int | None = None
     fan_req: int | None = None
     fan_set: int | None = None
     output_enabled: bool | None = None
     chg_id: int | None = None
+    # True after a CHGFUL handshake (battery was already full when plugged
+    # in); cleared when EVACHG opens a new charge session.
+    battery_full: bool = False
 
     # Mode tracking (recomputed by update_mode)
     mode: Mode = "unknown"
@@ -183,6 +198,10 @@ class BatteryState:
         elif cmd == "START_":
             if "chg_id" in ev:
                 self.chg_id = ev["chg_id"]
+        elif cmd == "EVACHG":
+            # New charge session beginning -- clear any "full" flag carried
+            # over from a previous plug-in.
+            self.battery_full = False
         elif cmd == "OUT_VM":
             if "v_out_cv" in ev:
                 self.v_out_cv = ev["v_out_cv"]
@@ -192,9 +211,22 @@ class BatteryState:
         elif cmd == "EN_OUT":
             if "enabled" in ev:
                 self.output_enabled = ev["enabled"]
+        elif cmd == "DISOUT":
+            # Counterpart to EN_OUT in the full-battery sequence; the
+            # output is being commanded off regardless of payload.
+            self.output_enabled = False
         elif cmd == "ADDCUR":
-            if "add_cur" in ev:
-                self.add_cur = ev["add_cur"]
+            val = ev.get("add_cur", ev.get("data"))
+            if val is not None:
+                self.add_cur = val
+                self.delta_cur = +val
+        elif cmd == "DECCUR":
+            # Firmware doesn't emit a per-command field for DECCUR, so
+            # fall back to the generic `data` field.
+            val = ev.get("dec_cur", ev.get("data"))
+            if val is not None:
+                self.dec_cur = val
+                self.delta_cur = -val
         elif cmd == "OUTCUR":
             if "cur" in ev:
                 self.cur = ev["cur"]
@@ -206,6 +238,16 @@ class BatteryState:
                 self.fan_req = ev["fan_req"]
             if "fan_set" in ev:
                 self.fan_set = ev["fan_set"]
+        elif cmd == "FANOFF":
+            # Counterpart to FAN_ON in the full-battery sequence.
+            # BATT->FANOFF is the request, TOOL->FANOFF the actual setting.
+            dir_ = ev.get("dir")
+            if dir_ == "BATT":
+                self.fan_req = 0
+            elif dir_ == "TOOL":
+                self.fan_set = 0
+        elif cmd == "CHGFUL":
+            self.battery_full = True
 
     def update_mode(self, now: float | None = None) -> None:
         """Recompute self.mode based on observed activity. Call ~1Hz."""

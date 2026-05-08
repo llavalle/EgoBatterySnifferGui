@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """GUI shell.
 
 Threading model: a SerialReader QThread reads pyserial and emits Qt

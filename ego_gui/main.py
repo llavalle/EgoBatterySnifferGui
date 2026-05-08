@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Phase 1 CLI: read NDJSON from serial (or a captured file), maintain
 BatteryState, print a one-line dashboard each second.
 
@@ -126,17 +127,26 @@ def stream_replay(path: Path) -> Iterator[str]:
 
 def run(stream: Iterator[str]) -> None:
     state = BatteryState()
-    last_print = 0.0
+    # Initialize to "now" so the first iteration doesn't trip the
+    # 1 Hz throttle just because last_print was 0.0.
+    last_print = time.monotonic()
+    line_count = 0
     for line in stream:
         if line:
             ev = parse_line(line)
             if ev is not None:
                 state.apply(ev)
+            line_count += 1
         now = time.monotonic()
         state.update_mode(now)
         if now - last_print >= 1.0:
             print(render_dashboard(state))
             last_print = now
+    # Stream ended (replay path only -- serial loops forever). Always
+    # print a final snapshot so a fast replay isn't silent.
+    state.update_mode()
+    print(f"--- end of stream ({line_count} lines processed) ---", file=sys.stderr)
+    print(render_dashboard(state))
 
 
 def main(argv: list[str] | None = None) -> int:

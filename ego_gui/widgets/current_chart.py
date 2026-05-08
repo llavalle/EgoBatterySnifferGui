@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Rolling line chart for the charger's delivered current.
 
 Custom-painted (no QtCharts dependency). Stores the last `window_s`

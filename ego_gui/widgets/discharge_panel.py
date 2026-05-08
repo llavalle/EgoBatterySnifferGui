@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
 """Phase 3a: discharge / diagnostic panel.
 
 Shows the 14 cell voltages with bars (range 2.5-4.5 V), pack voltage and
