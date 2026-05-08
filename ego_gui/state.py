@@ -33,6 +33,14 @@ Mode = Literal["idle", "discharge", "charge", "unknown"]
 MODE_VOCAB_WINDOW_S = 5.0
 # How long without any frames before declaring "unknown"
 MODE_DEAD_WINDOW_S = 10.0
+# Max gap between consecutive ID frames that still counts as the same
+# heartbeat run. Larger gaps reset id_interval_ms so the EWMA tracks the
+# current cadence instead of dragging in a stale interval.
+ID_CADENCE_GAP_S = 1.0
+# EWMA weight on the most recent inter-arrival sample (0..1). 0.3 ≈
+# 3-sample moving average; smooth enough to not jitter, fast enough to
+# track a cadence change within a few beats.
+ID_CADENCE_ALPHA = 0.3
 
 
 @dataclass
@@ -79,6 +87,13 @@ class BatteryState:
     _pending_cell: int | None = field(default=None, repr=False, compare=False)
     _pending_sensor: int | None = field(default=None, repr=False, compare=False)
 
+    # ID heartbeat cadence (EWMA over consecutive ID frames). None until
+    # at least two IDs have been seen within ID_CADENCE_GAP_S of each
+    # other; reset when a longer gap appears (e.g. a discharge session
+    # where the tool dominates the bus).
+    id_interval_ms: float | None = None
+    _prev_id_seen: float = field(default=0.0, repr=False, compare=False)
+
     def apply(self, event: dict[str, Any]) -> None:
         """Update state from a parsed NDJSON event."""
         t = event.get("t")
@@ -106,6 +121,23 @@ class BatteryState:
                 self.id_bytes = bytes.fromhex(bytes_str.replace(" ", ""))
             except ValueError:
                 pass
+            # Heartbeat cadence: EWMA on the inter-arrival, but reset on
+            # long gaps so a stale interval from a previous run doesn't
+            # bias the average.
+            if self._prev_id_seen > 0.0:
+                gap = now - self._prev_id_seen
+                if gap < ID_CADENCE_GAP_S:
+                    sample_ms = gap * 1000.0
+                    if self.id_interval_ms is None:
+                        self.id_interval_ms = sample_ms
+                    else:
+                        self.id_interval_ms = (
+                            (1.0 - ID_CADENCE_ALPHA) * self.id_interval_ms
+                            + ID_CADENCE_ALPHA * sample_ms
+                        )
+                else:
+                    self.id_interval_ms = None
+            self._prev_id_seen = now
             self.last_id_seen = now
             return
 
