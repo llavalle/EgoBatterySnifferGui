@@ -10,13 +10,16 @@ visible widgets.
 
 from __future__ import annotations
 
+import datetime
 import sys
+from pathlib import Path
 
 from PySide6.QtCore import QTimer
 from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (
     QApplication,
     QComboBox,
+    QFileDialog,
     QHBoxLayout,
     QLabel,
     QMainWindow,
@@ -29,6 +32,7 @@ from PySide6.QtWidgets import (
 from serial.tools import list_ports
 
 from .main import KNOWN_SNIFFER_IDS
+from .power import keep_awake_supported, set_keep_awake
 from .serial_reader import SerialReader
 from .state import BatteryState
 from .widgets.activity_led import ActivityLed
@@ -37,6 +41,9 @@ from .widgets.debug_log import DebugLog
 from .widgets.discharge_panel import DischargePanel
 from .widgets.header_panel import HeaderPanel
 from .widgets.idle_panel import IdlePanel
+
+
+_CAPTURES_DIR = Path("captures")
 
 
 # Mode -> stack index. "unknown" falls back to the idle panel.
@@ -56,8 +63,12 @@ class MainWindow(QMainWindow):
 
         self.state = BatteryState()
         self.reader: SerialReader | None = None
+        # Raw NDJSON lines accumulated since the window opened. Persists
+        # across connect/disconnect cycles so a session that flips modes
+        # several times still saves as one capture.
+        self._capture_buffer: list[str] = []
 
-        # ---- Top bar: port + connect controls + RX LED ----
+        # ---- Top bar: port + connect controls + save + RX LED ----
         topbar = QHBoxLayout()
         topbar.addWidget(QLabel("Port:"))
         self.port_combo = QComboBox()
@@ -67,9 +78,11 @@ class MainWindow(QMainWindow):
         self.connect_btn = QPushButton("Connect")
         self.disconnect_btn = QPushButton("Disconnect")
         self.disconnect_btn.setEnabled(False)
+        self.save_btn = QPushButton("Save Capture")
         topbar.addWidget(self.refresh_btn)
         topbar.addWidget(self.connect_btn)
         topbar.addWidget(self.disconnect_btn)
+        topbar.addWidget(self.save_btn)
         topbar.addStretch(1)
         topbar.addWidget(QLabel("RX"))
         self.rx_led = ActivityLed(QColor(0, 220, 0))
@@ -101,10 +114,18 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(central)
         self.setStatusBar(QStatusBar())
 
+        # Permanent corner widget: indicates whether the OS sleep
+        # inhibitor is currently held. Sits on the right of the status
+        # bar and is not cleared by transient showMessage() calls.
+        self.keep_awake_label = QLabel()
+        self.statusBar().addPermanentWidget(self.keep_awake_label)
+        self._set_keep_awake_label(False)
+
         # ---- Wire up ----
         self.refresh_btn.clicked.connect(self.refresh_ports)
         self.connect_btn.clicked.connect(self.connect_port)
         self.disconnect_btn.clicked.connect(self.disconnect_port)
+        self.save_btn.clicked.connect(self.save_capture)
 
         # 10Hz tick: drives mode-decay logic and refreshes the header
         self._tick = QTimer(self)
@@ -158,6 +179,8 @@ class MainWindow(QMainWindow):
         self.reader.start()
         self.connect_btn.setEnabled(False)
         self.disconnect_btn.setEnabled(True)
+        set_keep_awake(True)
+        self._set_keep_awake_label(True)
         self.statusBar().showMessage(f"connecting to {port}...", 2000)
 
     def disconnect_port(self) -> None:
@@ -167,6 +190,56 @@ class MainWindow(QMainWindow):
             self.reader = None
         self.connect_btn.setEnabled(True)
         self.disconnect_btn.setEnabled(False)
+        set_keep_awake(False)
+        self._set_keep_awake_label(False)
+
+    def _set_keep_awake_label(self, active: bool) -> None:
+        if not keep_awake_supported():
+            self.keep_awake_label.setText("Keep-awake: n/a")
+            self.keep_awake_label.setStyleSheet("color: gray; font-style: italic;")
+            self.keep_awake_label.setToolTip(
+                "OS sleep inhibitor not implemented for this platform"
+            )
+            return
+        if active:
+            self.keep_awake_label.setText("Keep-awake: on")
+            self.keep_awake_label.setStyleSheet("color: #388e3c; font-weight: bold;")
+            self.keep_awake_label.setToolTip(
+                "While connected, the system will not sleep or blank the display"
+            )
+        else:
+            self.keep_awake_label.setText("Keep-awake: off")
+            self.keep_awake_label.setStyleSheet("color: gray;")
+            self.keep_awake_label.setToolTip("Normal sleep / display behavior")
+
+    # ---- Capture save ----
+
+    def save_capture(self) -> None:
+        if not self._capture_buffer:
+            self.statusBar().showMessage("no data captured yet", 3000)
+            return
+        _CAPTURES_DIR.mkdir(parents=True, exist_ok=True)
+        ts = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
+        suggested = _CAPTURES_DIR / f"capture_{ts}.ndjson"
+        path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Save Capture",
+            str(suggested),
+            "NDJSON (*.ndjson);;All files (*)",
+        )
+        if not path:
+            return
+        try:
+            with open(path, "w", encoding="utf-8", newline="\n") as f:
+                for line in self._capture_buffer:
+                    f.write(line)
+                    f.write("\n")
+        except OSError as e:
+            self.statusBar().showMessage(f"save failed: {e}", 5000)
+            return
+        self.statusBar().showMessage(
+            f"saved {len(self._capture_buffer)} lines -> {path}", 5000
+        )
 
     def closeEvent(self, e) -> None:  # type: ignore[override]
         self.disconnect_port()
@@ -175,6 +248,7 @@ class MainWindow(QMainWindow):
     # ---- Slots from SerialReader ----
 
     def _on_raw_line(self, line: str) -> None:
+        self._capture_buffer.append(line)
         self.log.append_line(line)
         self.rx_led.trigger()
 
@@ -186,6 +260,8 @@ class MainWindow(QMainWindow):
         if not connected:
             self.connect_btn.setEnabled(True)
             self.disconnect_btn.setEnabled(False)
+            set_keep_awake(False)
+            self._set_keep_awake_label(False)
 
     # ---- Periodic UI refresh ----
 
