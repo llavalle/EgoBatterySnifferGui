@@ -7,6 +7,20 @@ maintains a `BatteryState` model, and shows mode-aware UI panels
 
 See [guiplan.md](guiplan.md) for the full plan and protocol schema.
 
+## Screenshots
+
+Discharge mode (Nexus 400 tool) - cells, temps, pack voltage:
+
+![Discharge mode with Nexus 400](screenshots/nexus400.png)
+
+Charge mode with a normal charger (~3 A):
+
+![Charging with normal charger](screenshots/normalcharger.png)
+
+Charge mode with a rapid charger (~8 A):
+
+![Charging with rapid charger](screenshots/rapidcharger.png)
+
 ## Setup
 
 ```sh
