@@ -22,10 +22,16 @@ Read NDJSON from the firmware over serial, maintain state, print a
 one-line dashboard each second:
 
 ```sh
-python -m ego_gui.main --list-ports
-python -m ego_gui.main --port COM5
+python -m ego_gui.main                       # auto-detect the Mega by VID/PID
+python -m ego_gui.main --list-ports          # list ports; sniffer matches marked *
+python -m ego_gui.main --port COM5           # explicit port
 python -m ego_gui.main --replay capture.ndjson
 ```
+
+If no `--port` (or `--replay`) is given, the CLI scans serial ports for a
+known sniffer VID/PID (currently `2341:0042` - Arduino-LLC Mega 2560) and
+opens the match. Pass `--port` to override or to use a clone with a
+different VID/PID.
 
 `--replay` reads a saved NDJSON file instead of opening a serial port -
 useful for offline testing and protocol-decoder development.

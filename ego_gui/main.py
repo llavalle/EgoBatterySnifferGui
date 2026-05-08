@@ -22,6 +22,31 @@ from .parser import parse_line
 from .state import BatteryState
 
 
+# (VID, PID) pairs that identify a sniffer-capable board. Currently only the
+# Arduino-LLC Mega 2560 we ship with; extend with FTDI/CH340 clones as needed
+# (see the table in guiplan.md).
+KNOWN_SNIFFER_IDS: tuple[tuple[int, int], ...] = (
+    (0x2341, 0x0042),  # Arduino LLC Mega 2560
+)
+
+
+def autodetect_port() -> str | None:
+    """Return the device path of the first port whose VID/PID matches a known
+    sniffer board, or None if none match."""
+    matches = [
+        p for p in list_ports.comports()
+        if p.vid is not None and p.pid is not None
+        and (p.vid, p.pid) in KNOWN_SNIFFER_IDS
+    ]
+    if not matches:
+        return None
+    if len(matches) > 1:
+        names = ", ".join(p.device for p in matches)
+        print(f"warn: {len(matches)} matching ports ({names}); using {matches[0].device}",
+              file=sys.stderr)
+    return matches[0].device
+
+
 def cmd_list_ports() -> int:
     ports = list_ports.comports()
     if not ports:
@@ -30,7 +55,8 @@ def cmd_list_ports() -> int:
     for p in ports:
         vid = f"{p.vid:04X}" if p.vid else "----"
         pid = f"{p.pid:04X}" if p.pid else "----"
-        print(f"{p.device}\tVID={vid} PID={pid}\t{p.description}")
+        marker = "  *" if p.vid is not None and (p.vid, p.pid) in KNOWN_SNIFFER_IDS else ""
+        print(f"{p.device}\tVID={vid} PID={pid}\t{p.description}{marker}")
     return 0
 
 
@@ -124,7 +150,14 @@ def main(argv: list[str] | None = None) -> int:
     if args.list_ports:
         return cmd_list_ports()
     if not args.port and not args.replay:
-        p.error("either --port or --replay is required")
+        args.port = autodetect_port()
+        if args.port is None:
+            p.error(
+                "no sniffer auto-detected (looking for VID:PID "
+                + ", ".join(f"{v:04X}:{pid:04X}" for v, pid in KNOWN_SNIFFER_IDS)
+                + "); pass --port or --replay"
+            )
+        print(f"auto-detected sniffer on {args.port}", file=sys.stderr)
 
     try:
         if args.replay:
