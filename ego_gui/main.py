@@ -66,9 +66,14 @@ def render_dashboard(s: BatteryState) -> str:
     if s.id_bytes:
         parts.append(f"id={s.id_bytes.hex().upper()}")
     if s.s_count is not None:
-        parts.append(f"{s.s_count}S")
+        sp = f"{s.s_count}S"
+        if s.p_count is not None:
+            sp += f"{s.p_count}P"
+        parts.append(sp)
     if s.gen is not None:
         parts.append(f"gen{s.gen}")
+    if s.p_count is not None and s.ah_per_cell_x100 is not None:
+        parts.append(f"{s.p_count * s.ah_per_cell_x100 / 100:.1f}Ah")
     if s.ah_per_cell_x100 is not None:
         parts.append(f"{s.ah_per_cell_x100 / 100:.2f}Ah/cell")
 

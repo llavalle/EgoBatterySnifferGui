@@ -32,9 +32,14 @@ class HeaderPanel(QWidget):
             self.id_label.setText(f"Battery: {s.id_bytes.hex().upper()}")
         bits = []
         if s.s_count is not None:
-            bits.append(f"{s.s_count}S")
+            sp = f"{s.s_count}S"
+            if s.p_count is not None:
+                sp += f"{s.p_count}P"
+            bits.append(sp)
         if s.gen is not None:
             bits.append(f"Gen{s.gen}")
+        if s.p_count is not None and s.ah_per_cell_x100 is not None:
+            bits.append(f"{s.p_count * s.ah_per_cell_x100 / 100:.1f} Ah")
         if s.ah_per_cell_x100 is not None:
             bits.append(f"{s.ah_per_cell_x100 / 100:.2f} Ah/cell")
         if s.fsh_status is not None:

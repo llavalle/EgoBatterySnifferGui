@@ -55,7 +55,7 @@ class BatteryState:
     # Identity (from ID frame + RD_SPC + RD_CAP + RD_FSH)
     id_bytes: bytes | None = None
     s_count: int | None = None
-    model: int | None = None
+    p_count: int | None = None
     gen: int | None = None
     ah_per_cell_x100: int | None = None
     fsh_status: int | None = None
@@ -181,8 +181,8 @@ class BatteryState:
         elif cmd == "RD_SPC":
             if "s_count" in ev:
                 self.s_count = ev["s_count"]
-            if "model" in ev:
-                self.model = ev["model"]
+            if "p_count" in ev:
+                self.p_count = ev["p_count"]
         elif cmd == "RD_CAP":
             if "ah_per_cell_x100" in ev:
                 self.ah_per_cell_x100 = ev["ah_per_cell_x100"]

@@ -4,9 +4,11 @@
 Threading model: a SerialReader QThread reads pyserial and emits Qt
 signals (raw_line, event_received, connection_changed). All widget
 updates happen on the main thread via Qt's auto-queued cross-thread
-slots. A 10Hz QTimer ticks the BatteryState's mode detection, switches
-the QStackedWidget to the matching mode panel, and refreshes the
-visible widgets.
+slots. A 10Hz QTimer ticks the BatteryState's mode detection, refreshes
+all three mode panels (Idle / Discharge / Charge) shown as tabs, and
+auto-switches the active tab when the detected mode changes. Each
+panel reads from the sticky BatteryState, so inactive tabs keep
+showing their last snapshot.
 """
 
 from __future__ import annotations
@@ -25,8 +27,8 @@ from PySide6.QtWidgets import (
     QLabel,
     QMainWindow,
     QPushButton,
-    QStackedWidget,
     QStatusBar,
+    QTabWidget,
     QVBoxLayout,
     QWidget,
 )
@@ -47,7 +49,7 @@ from .widgets.idle_panel import IdlePanel
 _CAPTURES_DIR = Path("captures")
 
 
-# Mode -> stack index. "unknown" falls back to the idle panel.
+# Mode -> tab index. "unknown" falls back to the idle tab.
 _MODE_TO_INDEX: dict[str, int] = {
     "idle": 0,
     "unknown": 0,
@@ -92,15 +94,19 @@ class MainWindow(QMainWindow):
         # ---- Header (battery identity + mode) ----
         self.header = HeaderPanel()
 
-        # ---- Mode-aware panel stack ----
+        # ---- Mode panels as tabs ----
         self.discharge_panel = DischargePanel()
         self.charge_panel = ChargePanel()
         self.idle_panel = IdlePanel()
-        self.panel_stack = QStackedWidget()
-        # Order matches _MODE_TO_INDEX below.
-        self.panel_stack.addWidget(self.idle_panel)        # 0: idle / unknown
-        self.panel_stack.addWidget(self.discharge_panel)   # 1: discharge
-        self.panel_stack.addWidget(self.charge_panel)      # 2: charge
+        self.tabs = QTabWidget()
+        # Order matches _MODE_TO_INDEX.
+        self.tabs.addTab(self.idle_panel, "Idle")           # 0: idle / unknown
+        self.tabs.addTab(self.discharge_panel, "Discharge") # 1: discharge
+        self.tabs.addTab(self.charge_panel, "Charge")       # 2: charge
+        # Tracks the last detected mode so we auto-switch tabs only on
+        # transitions, not every tick — otherwise a manual tab click
+        # would be yanked back to the active mode immediately.
+        self._last_mode: str | None = None
 
         # ---- Debug log ----
         self.log = DebugLog()
@@ -110,7 +116,7 @@ class MainWindow(QMainWindow):
         v = QVBoxLayout(central)
         v.addLayout(topbar)
         v.addWidget(self.header)
-        v.addWidget(self.panel_stack, 3)
+        v.addWidget(self.tabs, 3)
         v.addWidget(self.log, 2)
         self.setCentralWidget(central)
         self.setStatusBar(QStatusBar())
@@ -269,11 +275,12 @@ class MainWindow(QMainWindow):
     def tick(self) -> None:
         self.state.update_mode()
         self.header.update_from(self.state)
-        idx = _MODE_TO_INDEX.get(self.state.mode, 0)
-        self.panel_stack.setCurrentIndex(idx)
-        current = self.panel_stack.currentWidget()
-        if hasattr(current, "update_from"):
-            current.update_from(self.state)
+        if self.state.mode != self._last_mode:
+            self.tabs.setCurrentIndex(_MODE_TO_INDEX.get(self.state.mode, 0))
+            self._last_mode = self.state.mode
+        self.idle_panel.update_from(self.state)
+        self.discharge_panel.update_from(self.state)
+        self.charge_panel.update_from(self.state)
 
 
 def main() -> int:

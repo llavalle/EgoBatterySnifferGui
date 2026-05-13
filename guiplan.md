@@ -7,7 +7,7 @@ LEDs and a debug log.
 The GUI must handle three operating modes that the battery slips between:
 
 - **Discharge / diagnostic** — battery in a tool. Smart tool reads cells,
-  temps, model, capacity, FSH (`RD_VOL`/`RD_TMP`/`RD_SPC`/`RD_CAP`/`RD_FSH`).
+  temps, P/S count, capacity, FSH (`RD_VOL`/`RD_TMP`/`RD_SPC`/`RD_CAP`/`RD_FSH`).
   Dumb tool stays silent and we only see the battery's `ID, ID, START_`
   invite cycle.
 - **Charging** — battery on a charger. Different vocabulary entirely:
@@ -39,7 +39,7 @@ Each line is a self-describing JSON object. Examples covering both modes:
 {"t":"frame","ms":24629,"idx":22,"dir":"TOOL","bits":73,"bytes":"00 07 4C 4F 56 5F 44 52 0F","crc":"ok","cmd":"RD_VOL","data":1792,"cell":7}
 {"t":"frame","ms":24717,"idx":23,"dir":"BATT","bits":73,"bytes":"6E 01 4C 4F 56 5F 44 52 D9","crc":"ok","cmd":"RD_VOL","data":366,"v_cv":366}
 {"t":"frame","ms":24800,"idx":24,"dir":"BATT","bits":73,"bytes":"49 00 50 4D 54 5F 44 52 3E","crc":"ok","cmd":"RD_TMP","data":73,"temp_f":73}
-{"t":"frame","ms":25000,"idx":25,"dir":"BATT","bits":73,"bytes":"03 0E 43 50 53 5F 44 52 B0","crc":"ok","cmd":"RD_SPC","data":3587,"s_count":14,"model":3}
+{"t":"frame","ms":25000,"idx":25,"dir":"BATT","bits":73,"bytes":"03 0E 43 50 53 5F 44 52 B0","crc":"ok","cmd":"RD_SPC","data":3587,"s_count":14,"p_count":4}
 {"t":"frame","ms":25100,"idx":26,"dir":"BATT","bits":73,"bytes":"FA 00 50 41 43 5F 44 52 0A","crc":"ok","cmd":"RD_CAP","data":250,"ah_per_cell_x100":250}
 {"t":"frame","ms":25200,"idx":27,"dir":"BATT","bits":73,"bytes":"02 38 48 53 46 5F 44 52 66","crc":"ok","cmd":"RD_FSH","data":14338,"status":"0x3802","gen":2}
 
@@ -66,7 +66,7 @@ Rules:
 - For `frame` events, `dir` is `TOOL` | `BATT` | `?` (when ADC reading not available).
 - `cmd` is set when a known wire command was matched (otherwise omitted).
 - Per-command fields are added by the Arduino-side decoder so the GUI doesn't re-decode:
-  - **Discharge:** `cell` (req), `v_cv` (resp, centivolts), `sensor`, `temp_f`, `s_count`, `model`, `ah_per_cell_x100`, `q`, `status`, `gen`.
+  - **Discharge:** `cell` (req), `v_cv` (resp, centivolts), `sensor`, `temp_f`, `s_count`, `p_count`, `ah_per_cell_x100`, `q`, `status`, `gen`.
   - **Charging:** `chg_id` (charger's `START_` payload), `v_out_cv`, `i_out_ca`, `enabled`, `add_cur`, `cur`, `soc_pct`, `fan_req`, `fan_set`.
 - Direction-conditional fields follow the same logic as the Arduino's text decoder: `add_cur` only on `BATT->ADDCUR`; `cur` only on `TOOL->OUTCUR`; `soc_pct` only on `BATT->CHGPCT`; `fan_req` on BATT, `fan_set` on TOOL.
 
@@ -84,7 +84,7 @@ Memory-wise this is fine on the Mega — manual `sprintf`, no JSON library.
                                           ▼
                               ┌────────────────────────┐
                               │ BatteryState model     │
-                              │  - id, model, gen, S,  │
+                              │  - id, P, gen, S,      │
                               │    Ah, FSH             │
                               │  - cells[14], temps[2] │
                               │  - last_seen           │
@@ -106,8 +106,8 @@ Memory-wise this is fine on the Mega — manual `sprintf`, no JSON library.
 class BatteryState:
     # Identity (from ID frame + RD_SPC + RD_CAP + RD_FSH)
     id_bytes: bytes | None
-    s_count: int | None        # series cell count
-    model: int | None          # 1=Gen1 2=?, 3=Gen2 (observed)
+    s_count: int | None        # series cell count (always 14 observed)
+    p_count: int | None        # parallel cell count (firmware bakes in +1)
     gen: int | None            # 1 or 2
     ah_per_cell_x100: int | None
     fsh_status: int | None     # 0x38FF = Gen1 stub
