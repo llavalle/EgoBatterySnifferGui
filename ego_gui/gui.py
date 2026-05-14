@@ -21,6 +21,7 @@ from PySide6.QtCore import QTimer
 from PySide6.QtGui import QColor
 from PySide6.QtWidgets import (
     QApplication,
+    QCheckBox,
     QComboBox,
     QFileDialog,
     QHBoxLayout,
@@ -70,6 +71,12 @@ class MainWindow(QMainWindow):
         # across connect/disconnect cycles so a session that flips modes
         # several times still saves as one capture.
         self._capture_buffer: list[str] = []
+        # Auto-save state: open file handle, target path, and the count
+        # of buffer lines already flushed to disk. Index-based so we
+        # never re-write or skip lines even if the buffer grows mid-tick.
+        self._autosave_file = None
+        self._autosave_path: Path | None = None
+        self._autosave_written: int = 0
 
         # ---- Top bar: port + connect controls + save + RX LED ----
         topbar = QHBoxLayout()
@@ -82,10 +89,16 @@ class MainWindow(QMainWindow):
         self.disconnect_btn = QPushButton("Disconnect")
         self.disconnect_btn.setEnabled(False)
         self.save_btn = QPushButton("Save Capture")
+        self.autosave_chk = QCheckBox("Auto-save")
+        self.autosave_chk.setToolTip(
+            "Append new lines to a timestamped file in captures/ every second.\n"
+            "Protects against data loss if the app crashes mid-capture."
+        )
         topbar.addWidget(self.refresh_btn)
         topbar.addWidget(self.connect_btn)
         topbar.addWidget(self.disconnect_btn)
         topbar.addWidget(self.save_btn)
+        topbar.addWidget(self.autosave_chk)
         topbar.addStretch(1)
         topbar.addWidget(QLabel("RX"))
         self.rx_led = ActivityLed(QColor(0, 220, 0))
@@ -133,11 +146,18 @@ class MainWindow(QMainWindow):
         self.connect_btn.clicked.connect(self.connect_port)
         self.disconnect_btn.clicked.connect(self.disconnect_port)
         self.save_btn.clicked.connect(self.save_capture)
+        self.autosave_chk.toggled.connect(self._on_autosave_toggled)
 
         # 10Hz tick: drives mode-decay logic and refreshes the header
         self._tick = QTimer(self)
         self._tick.timeout.connect(self.tick)
         self._tick.start(100)
+
+        # 1Hz tick for the auto-save flush. Stays armed at all times;
+        # the slot is a no-op when auto-save is off.
+        self._autosave_tick = QTimer(self)
+        self._autosave_tick.timeout.connect(self._autosave_flush)
+        self._autosave_tick.start(1000)
 
         self.refresh_ports()
 
@@ -248,7 +268,73 @@ class MainWindow(QMainWindow):
             f"saved {len(self._capture_buffer)} lines -> {path}", 5000
         )
 
+    # ---- Auto-save ----
+
+    def _on_autosave_toggled(self, checked: bool) -> None:
+        if checked:
+            self._autosave_open()
+        else:
+            self._autosave_close()
+
+    def _autosave_open(self) -> None:
+        try:
+            _CAPTURES_DIR.mkdir(parents=True, exist_ok=True)
+            ts = datetime.datetime.now().strftime("%Y-%m-%d_%H%M%S")
+            path = _CAPTURES_DIR / f"autosave_{ts}.ndjson"
+            self._autosave_file = open(path, "w", encoding="utf-8", newline="\n")
+            self._autosave_path = path
+            self._autosave_written = 0
+            self.statusBar().showMessage(f"auto-saving to {path}", 5000)
+            self.log.append_line(f"# starting to capture on : {path.resolve()}")
+            # Flush whatever is already buffered so the file is non-empty
+            # if the checkbox was ticked mid-session.
+            self._autosave_flush()
+        except OSError as e:
+            self.statusBar().showMessage(f"auto-save failed to start: {e}", 5000)
+            self._autosave_file = None
+            self._autosave_path = None
+            # Untick without retriggering the slot.
+            self.autosave_chk.blockSignals(True)
+            self.autosave_chk.setChecked(False)
+            self.autosave_chk.blockSignals(False)
+
+    def _autosave_flush(self) -> None:
+        f = self._autosave_file
+        if f is None:
+            return
+        end = len(self._capture_buffer)
+        if end <= self._autosave_written:
+            return
+        try:
+            for line in self._capture_buffer[self._autosave_written:end]:
+                f.write(line)
+                f.write("\n")
+            f.flush()
+            self._autosave_written = end
+        except OSError as e:
+            self.statusBar().showMessage(f"auto-save write error: {e}", 5000)
+
+    def _autosave_close(self) -> None:
+        # Final flush so the file on disk matches the buffer at the
+        # moment auto-save was disabled.
+        self._autosave_flush()
+        if self._autosave_file is not None:
+            try:
+                self._autosave_file.close()
+            except OSError:
+                pass
+            path = self._autosave_path
+            written = self._autosave_written
+            self._autosave_file = None
+            self._autosave_path = None
+            self._autosave_written = 0
+            if path is not None:
+                self.statusBar().showMessage(
+                    f"auto-save closed ({written} lines) -> {path}", 5000
+                )
+
     def closeEvent(self, e) -> None:  # type: ignore[override]
+        self._autosave_close()
         self.disconnect_port()
         super().closeEvent(e)
 
