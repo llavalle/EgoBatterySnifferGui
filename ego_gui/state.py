@@ -59,6 +59,10 @@ class BatteryState:
     gen: int | None = None
     ah_per_cell_x100: int | None = None
     fsh_status: int | None = None
+    # Gen1 flash-page map: addr (e.g. 0x78..0x7B) -> byte at that address.
+    # Populated as the tool sweeps RD_FSH pages. Gen2 packs answer a single
+    # status read at 0x38, which also lands here.
+    fsh_pages: dict[int, int] = field(default_factory=dict)
     last_id_seen: float = 0.0  # monotonic timestamp
 
     # Discharge / diagnostic readouts
@@ -187,14 +191,40 @@ class BatteryState:
             if "ah_per_cell_x100" in ev:
                 self.ah_per_cell_x100 = ev["ah_per_cell_x100"]
         elif cmd == "RD_FSH":
+            addr = ev.get("fsh_addr")
+            val = ev.get("fsh_value")
             status = ev.get("status")
+            status_int: int | None = None
             if isinstance(status, str):
                 try:
-                    self.fsh_status = int(status, 16)
+                    status_int = int(status, 16)
+                    self.fsh_status = status_int
                 except ValueError:
                     pass
+            # Legacy captures (pre-fsh_addr/fsh_value firmware) only had
+            # `status`; derive addr/value from it so replayed captures still
+            # populate the page map.
+            if status_int is not None:
+                if not isinstance(addr, int):
+                    addr = (status_int >> 8) & 0xFF
+                if not isinstance(val, int):
+                    val = status_int & 0xFF
+            if isinstance(addr, int) and isinstance(val, int):
+                self.fsh_pages[addr] = val
+        elif cmd == "ADJUST":
+            # Battery's ADJUST reply is the documented gen marker: Gen1
+            # echoes 0x0000, Gen2 replies 0x00A0. Firmware emits `gen` on
+            # BATT->ADJUST; legacy captures used a (wrong) RD_FSH-based
+            # `gen` instead, so fall back to inferring it from `data` when
+            # the new field is absent and the frame is from the battery.
             if "gen" in ev:
                 self.gen = ev["gen"]
+            elif ev.get("dir") == "BATT":
+                data = ev.get("data")
+                if data == 0x0000:
+                    self.gen = 1
+                elif data == 0x00A0:
+                    self.gen = 2
         elif cmd == "START_":
             if "chg_id" in ev:
                 self.chg_id = ev["chg_id"]

@@ -10,8 +10,9 @@ venv/
 .mypy_cache/
 .ruff_cache/
 
-# Captures (per guiplan.md "captures/ - optional, gitignored")
-captures/
+# Captures: ignore only the auto-saved rolling files; keep manually-named
+# captures (used as reference data by docs/analyses).
+captures/autosave_*.ndjson
 
 # IDE
 .vscode/
