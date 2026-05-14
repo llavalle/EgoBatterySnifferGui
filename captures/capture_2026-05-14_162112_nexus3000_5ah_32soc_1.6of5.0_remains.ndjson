@@ -1,0 +1,145 @@
+{"t":"hello","fw":"egosniffer/1.0","build":"May 14 2026 13:56:01"}
+{"t":"evt","ms":2000,"evt":"line_init","line":"LOW"}
+{"t":"evt","ms":7026,"evt":"long_low","dur_us":5022288}
+{"t":"evt","ms":7044,"evt":"long_low","dur_us":16848}
+{"t":"evt","ms":7074,"evt":"long_low","dur_us":31628}
+{"t":"frame","ms":7450,"idx":1,"dir":"BATT","dir_mv":405,"bits":40,"bytes":"AA 19 46 56 41","crc":"ok","cmd":"ID"}
+{"t":"frame","ms":7631,"idx":2,"dir":"BATT","dir_mv":405,"bits":40,"bytes":"AA 19 46 56 41","crc":"ok","cmd":"ID"}
+{"t":"frame","ms":7706,"idx":3,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"00 00 5F 54 52 41 54 53 B0","crc":"ok","cmd":"START_","data":0}
+{"t":"frame","ms":7766,"idx":4,"dir":"TOOL","dir_mv":43,"bits":73,"bytes":"00 00 54 53 55 4A 44 41 93","crc":"ok","cmd":"ADJUST","data":0}
+{"t":"frame","ms":7853,"idx":5,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"00 00 54 53 55 4A 44 41 93","crc":"ok","cmd":"ADJUST","data":0,"gen":1}
+{"t":"frame","ms":7914,"idx":6,"dir":"TOOL","dir_mv":73,"bits":73,"bytes":"00 00 50 41 43 5F 44 52 81","crc":"ok","cmd":"RD_CAP","data":0}
+{"t":"frame","ms":7975,"idx":7,"dir":"BATT","dir_mv":385,"bits":73,"bytes":"FA 00 50 41 43 5F 44 52 0A","crc":"ok","cmd":"RD_CAP","data":250,"ah_per_cell_x100":250}
+{"t":"frame","ms":8038,"idx":8,"dir":"TOOL","dir_mv":83,"bits":73,"bytes":"00 38 48 53 46 5F 44 52 E0","crc":"ok","cmd":"RD_FSH","data":14336,"fsh_addr":56,"q":14336}
+{"t":"frame","ms":8098,"idx":9,"dir":"BATT","dir_mv":385,"bits":73,"bytes":"FF 38 48 53 46 5F 44 52 3D","crc":"ok","cmd":"RD_FSH","data":14591,"fsh_addr":56,"fsh_value":255,"status":"0x38FF"}
+{"t":"frame","ms":8161,"idx":10,"dir":"TOOL","dir_mv":68,"bits":73,"bytes":"00 78 48 53 46 5F 44 52 27","crc":"ok","cmd":"RD_FSH","data":30720,"fsh_addr":120,"q":30720}
+{"t":"frame","ms":8222,"idx":11,"dir":"BATT","dir_mv":400,"bits":73,"bytes":"23 78 48 53 46 5F 44 52 4A","crc":"ok","cmd":"RD_FSH","data":30755,"fsh_addr":120,"fsh_value":35,"status":"0x7823"}
+{"t":"frame","ms":8284,"idx":12,"dir":"TOOL","dir_mv":92,"bits":73,"bytes":"00 79 48 53 46 5F 44 52 1A","crc":"ok","cmd":"RD_FSH","data":30976,"fsh_addr":121,"q":30976}
+{"t":"frame","ms":8345,"idx":13,"dir":"BATT","dir_mv":415,"bits":73,"bytes":"D0 79 48 53 46 5F 44 52 95","crc":"ok","cmd":"RD_FSH","data":31184,"fsh_addr":121,"fsh_value":208,"status":"0x79D0"}
+{"t":"frame","ms":8408,"idx":14,"dir":"TOOL","dir_mv":58,"bits":73,"bytes":"00 7A 48 53 46 5F 44 52 5D","crc":"ok","cmd":"RD_FSH","data":31232,"fsh_addr":122,"q":31232}
+{"t":"frame","ms":8468,"idx":15,"dir":"BATT","dir_mv":390,"bits":73,"bytes":"2A 7A 48 53 46 5F 44 52 59","crc":"ok","cmd":"RD_FSH","data":31274,"fsh_addr":122,"fsh_value":42,"status":"0x7A2A"}
+{"t":"frame","ms":8531,"idx":16,"dir":"TOOL","dir_mv":63,"bits":73,"bytes":"00 7B 48 53 46 5F 44 52 60","crc":"ok","cmd":"RD_FSH","data":31488,"fsh_addr":123,"q":31488}
+{"t":"frame","ms":8592,"idx":17,"dir":"BATT","dir_mv":405,"bits":73,"bytes":"06 7B 48 53 46 5F 44 52 F3","crc":"ok","cmd":"RD_FSH","data":31494,"fsh_addr":123,"fsh_value":6,"status":"0x7B06"}
+{"t":"frame","ms":8654,"idx":18,"dir":"TOOL","dir_mv":58,"bits":73,"bytes":"00 00 4C 4F 56 5F 44 52 BC","crc":"ok","cmd":"RD_VOL","data":0,"cell":0}
+{"t":"frame","ms":8786,"idx":19,"dir":"BATT","dir_mv":390,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"frame","ms":8848,"idx":20,"dir":"TOOL","dir_mv":83,"bits":73,"bytes":"00 01 4C 4F 56 5F 44 52 81","crc":"ok","cmd":"RD_VOL","data":256,"cell":1}
+{"t":"frame","ms":8980,"idx":21,"dir":"BATT","dir_mv":405,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":9042,"idx":22,"dir":"TOOL","dir_mv":34,"bits":73,"bytes":"00 02 4C 4F 56 5F 44 52 C6","crc":"ok","cmd":"RD_VOL","data":512,"cell":2}
+{"t":"frame","ms":9175,"idx":23,"dir":"BATT","dir_mv":380,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":9236,"idx":24,"dir":"TOOL","dir_mv":78,"bits":73,"bytes":"00 03 4C 4F 56 5F 44 52 FB","crc":"ok","cmd":"RD_VOL","data":768,"cell":3}
+{"t":"frame","ms":9368,"idx":25,"dir":"BATT","dir_mv":385,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":9431,"idx":26,"dir":"TOOL","dir_mv":68,"bits":73,"bytes":"00 04 4C 4F 56 5F 44 52 48","crc":"ok","cmd":"RD_VOL","data":1024,"cell":4}
+{"t":"frame","ms":9563,"idx":27,"dir":"BATT","dir_mv":410,"bits":73,"bytes":"61 01 4C 4F 56 5F 44 52 23","crc":"ok","cmd":"RD_VOL","data":353,"v_cv":353}
+{"t":"frame","ms":9624,"idx":28,"dir":"TOOL","dir_mv":68,"bits":73,"bytes":"00 05 4C 4F 56 5F 44 52 75","crc":"ok","cmd":"RD_VOL","data":1280,"cell":5}
+{"t":"frame","ms":9757,"idx":29,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":9819,"idx":30,"dir":"TOOL","dir_mv":87,"bits":73,"bytes":"00 06 4C 4F 56 5F 44 52 32","crc":"ok","cmd":"RD_VOL","data":1536,"cell":6}
+{"t":"frame","ms":9952,"idx":31,"dir":"BATT","dir_mv":385,"bits":73,"bytes":"61 01 4C 4F 56 5F 44 52 23","crc":"ok","cmd":"RD_VOL","data":353,"v_cv":353}
+{"t":"frame","ms":10014,"idx":32,"dir":"TOOL","dir_mv":92,"bits":73,"bytes":"00 07 4C 4F 56 5F 44 52 0F","crc":"ok","cmd":"RD_VOL","data":1792,"cell":7}
+{"t":"frame","ms":10110,"idx":33,"dir":"BATT","dir_mv":390,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":10172,"idx":34,"dir":"TOOL","dir_mv":43,"bits":73,"bytes":"00 08 4C 4F 56 5F 44 52 4D","crc":"ok","cmd":"RD_VOL","data":2048,"cell":8}
+{"t":"frame","ms":10268,"idx":35,"dir":"BATT","dir_mv":400,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"frame","ms":10330,"idx":36,"dir":"TOOL","dir_mv":58,"bits":73,"bytes":"00 09 4C 4F 56 5F 44 52 70","crc":"ok","cmd":"RD_VOL","data":2304,"cell":9}
+{"t":"frame","ms":10426,"idx":37,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":10488,"idx":38,"dir":"TOOL","dir_mv":39,"bits":73,"bytes":"00 0A 4C 4F 56 5F 44 52 37","crc":"ok","cmd":"RD_VOL","data":2560,"cell":10}
+{"t":"frame","ms":10585,"idx":39,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":10647,"idx":40,"dir":"TOOL","dir_mv":73,"bits":73,"bytes":"00 0B 4C 4F 56 5F 44 52 0A","crc":"ok","cmd":"RD_VOL","data":2816,"cell":11}
+{"t":"frame","ms":10743,"idx":41,"dir":"BATT","dir_mv":405,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":10805,"idx":42,"dir":"TOOL","dir_mv":43,"bits":73,"bytes":"00 0C 4C 4F 56 5F 44 52 B9","crc":"ok","cmd":"RD_VOL","data":3072,"cell":12}
+{"t":"frame","ms":10902,"idx":43,"dir":"BATT","dir_mv":390,"bits":73,"bytes":"64 01 4C 4F 56 5F 44 52 75","crc":"ok","cmd":"RD_VOL","data":356,"v_cv":356}
+{"t":"frame","ms":10963,"idx":44,"dir":"TOOL","dir_mv":43,"bits":73,"bytes":"00 0D 4C 4F 56 5F 44 52 84","crc":"ok","cmd":"RD_VOL","data":3328,"cell":13}
+{"t":"frame","ms":11060,"idx":45,"dir":"BATT","dir_mv":385,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"frame","ms":11121,"idx":46,"dir":"TOOL","dir_mv":58,"bits":73,"bytes":"00 00 4C 4F 56 5F 44 52 BC","crc":"ok","cmd":"RD_VOL","data":0,"cell":0}
+{"t":"frame","ms":11253,"idx":47,"dir":"BATT","dir_mv":385,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"frame","ms":11315,"idx":48,"dir":"TOOL","dir_mv":63,"bits":73,"bytes":"00 01 4C 4F 56 5F 44 52 81","crc":"ok","cmd":"RD_VOL","data":256,"cell":1}
+{"t":"frame","ms":11448,"idx":49,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":11509,"idx":50,"dir":"TOOL","dir_mv":87,"bits":73,"bytes":"00 02 4C 4F 56 5F 44 52 C6","crc":"ok","cmd":"RD_VOL","data":512,"cell":2}
+{"t":"frame","ms":11641,"idx":51,"dir":"BATT","dir_mv":400,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":11704,"idx":52,"dir":"TOOL","dir_mv":87,"bits":73,"bytes":"00 03 4C 4F 56 5F 44 52 FB","crc":"ok","cmd":"RD_VOL","data":768,"cell":3}
+{"t":"frame","ms":11836,"idx":53,"dir":"BATT","dir_mv":390,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":11898,"idx":54,"dir":"TOOL","dir_mv":73,"bits":73,"bytes":"00 04 4C 4F 56 5F 44 52 48","crc":"ok","cmd":"RD_VOL","data":1024,"cell":4}
+{"t":"frame","ms":12030,"idx":55,"dir":"BATT","dir_mv":410,"bits":73,"bytes":"61 01 4C 4F 56 5F 44 52 23","crc":"ok","cmd":"RD_VOL","data":353,"v_cv":353}
+{"t":"frame","ms":12094,"idx":56,"dir":"TOOL","dir_mv":73,"bits":74,"bytes":"00 0A 98 9E AC BE 88 4C D5","leftover_bits":2,"cmd":"L.....","data":2560}
+{"t":"frame","ms":12226,"idx":57,"dir":"BATT","dir_mv":390,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":12289,"idx":58,"dir":"TOOL","dir_mv":68,"bits":73,"bytes":"00 06 4C 4F 56 5F 44 52 32","crc":"ok","cmd":"RD_VOL","data":1536,"cell":6}
+{"t":"frame","ms":12421,"idx":59,"dir":"BATT","dir_mv":385,"bits":73,"bytes":"61 01 4C 4F 56 5F 44 52 23","crc":"ok","cmd":"RD_VOL","data":353,"v_cv":353}
+{"t":"frame","ms":12482,"idx":60,"dir":"TOOL","dir_mv":43,"bits":73,"bytes":"00 07 4C 4F 56 5F 44 52 0F","crc":"ok","cmd":"RD_VOL","data":1792,"cell":7}
+{"t":"frame","ms":12578,"idx":61,"dir":"BATT","dir_mv":400,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":12641,"idx":62,"dir":"TOOL","dir_mv":43,"bits":73,"bytes":"00 08 4C 4F 56 5F 44 52 4D","crc":"ok","cmd":"RD_VOL","data":2048,"cell":8}
+{"t":"frame","ms":12736,"idx":63,"dir":"BATT","dir_mv":390,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"frame","ms":12798,"idx":64,"dir":"TOOL","dir_mv":73,"bits":73,"bytes":"00 09 4C 4F 56 5F 44 52 70","crc":"ok","cmd":"RD_VOL","data":2304,"cell":9}
+{"t":"frame","ms":12895,"idx":65,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":12956,"idx":66,"dir":"TOOL","dir_mv":53,"bits":73,"bytes":"00 0A 4C 4F 56 5F 44 52 37","crc":"ok","cmd":"RD_VOL","data":2560,"cell":10}
+{"t":"frame","ms":13052,"idx":67,"dir":"BATT","dir_mv":390,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":13115,"idx":68,"dir":"TOOL","dir_mv":87,"bits":73,"bytes":"00 0B 4C 4F 56 5F 44 52 0A","crc":"ok","cmd":"RD_VOL","data":2816,"cell":11}
+{"t":"frame","ms":13211,"idx":69,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"frame","ms":13273,"idx":70,"dir":"TOOL","dir_mv":58,"bits":73,"bytes":"00 0C 4C 4F 56 5F 44 52 B9","crc":"ok","cmd":"RD_VOL","data":3072,"cell":12}
+{"t":"frame","ms":13369,"idx":71,"dir":"BATT","dir_mv":390,"bits":73,"bytes":"64 01 4C 4F 56 5F 44 52 75","crc":"ok","cmd":"RD_VOL","data":356,"v_cv":356}
+{"t":"frame","ms":13431,"idx":72,"dir":"TOOL","dir_mv":68,"bits":73,"bytes":"00 0D 4C 4F 56 5F 44 52 84","crc":"ok","cmd":"RD_VOL","data":3328,"cell":13}
+{"t":"frame","ms":13528,"idx":73,"dir":"BATT","dir_mv":405,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"evt","ms":14031,"evt":"long_low","dur_us":502192}
+{"t":"frame","ms":14466,"idx":74,"dir":"BATT","dir_mv":400,"bits":40,"bytes":"AA 19 46 56 41","crc":"ok","cmd":"ID"}
+{"t":"frame","ms":14647,"idx":75,"dir":"BATT","dir_mv":395,"bits":40,"bytes":"AA 19 46 56 41","crc":"ok","cmd":"ID"}
+{"t":"frame","ms":14722,"idx":76,"dir":"BATT","dir_mv":400,"bits":73,"bytes":"00 00 5F 54 52 41 54 53 B0","crc":"ok","cmd":"START_","data":0}
+{"t":"frame","ms":14781,"idx":77,"dir":"TOOL","dir_mv":78,"bits":73,"bytes":"00 00 54 53 55 4A 44 41 93","crc":"ok","cmd":"ADJUST","data":0}
+{"t":"frame","ms":14868,"idx":78,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"00 00 54 53 55 4A 44 41 93","crc":"ok","cmd":"ADJUST","data":0,"gen":1}
+{"t":"frame","ms":14930,"idx":79,"dir":"TOOL","dir_mv":83,"bits":73,"bytes":"00 00 4C 4F 56 5F 44 52 BC","crc":"ok","cmd":"RD_VOL","data":0,"cell":0}
+{"t":"frame","ms":15048,"idx":80,"dir":"BATT","dir_mv":385,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"frame","ms":15111,"idx":81,"dir":"TOOL","dir_mv":58,"bits":73,"bytes":"00 01 4C 4F 56 5F 44 52 81","crc":"ok","cmd":"RD_VOL","data":256,"cell":1}
+{"t":"frame","ms":15243,"idx":82,"dir":"BATT","dir_mv":385,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":15304,"idx":83,"dir":"TOOL","dir_mv":68,"bits":73,"bytes":"00 02 4C 4F 56 5F 44 52 C6","crc":"ok","cmd":"RD_VOL","data":512,"cell":2}
+{"t":"frame","ms":15437,"idx":84,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":15499,"idx":85,"dir":"TOOL","dir_mv":53,"bits":73,"bytes":"00 03 4C 4F 56 5F 44 52 FB","crc":"ok","cmd":"RD_VOL","data":768,"cell":3}
+{"t":"frame","ms":15632,"idx":86,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":15693,"idx":87,"dir":"TOOL","dir_mv":73,"bits":73,"bytes":"00 04 4C 4F 56 5F 44 52 48","crc":"ok","cmd":"RD_VOL","data":1024,"cell":4}
+{"t":"frame","ms":15825,"idx":88,"dir":"BATT","dir_mv":415,"bits":73,"bytes":"61 01 4C 4F 56 5F 44 52 23","crc":"ok","cmd":"RD_VOL","data":353,"v_cv":353}
+{"t":"frame","ms":15888,"idx":89,"dir":"TOOL","dir_mv":43,"bits":73,"bytes":"00 05 4C 4F 56 5F 44 52 75","crc":"ok","cmd":"RD_VOL","data":1280,"cell":5}
+{"t":"frame","ms":16021,"idx":90,"dir":"BATT","dir_mv":405,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":16083,"idx":91,"dir":"TOOL","dir_mv":43,"bits":73,"bytes":"00 06 4C 4F 56 5F 44 52 32","crc":"ok","cmd":"RD_VOL","data":1536,"cell":6}
+{"t":"frame","ms":16217,"idx":92,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"64 01 4C 4F 56 5F 44 52 75","crc":"ok","cmd":"RD_VOL","data":356,"v_cv":356}
+{"t":"frame","ms":16278,"idx":93,"dir":"TOOL","dir_mv":83,"bits":73,"bytes":"00 07 4C 4F 56 5F 44 52 0F","crc":"ok","cmd":"RD_VOL","data":1792,"cell":7}
+{"t":"frame","ms":16374,"idx":94,"dir":"BATT","dir_mv":390,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":16437,"idx":95,"dir":"TOOL","dir_mv":73,"bits":73,"bytes":"00 08 4C 4F 56 5F 44 52 4D","crc":"ok","cmd":"RD_VOL","data":2048,"cell":8}
+{"t":"frame","ms":16533,"idx":96,"dir":"BATT","dir_mv":405,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"frame","ms":16594,"idx":97,"dir":"TOOL","dir_mv":73,"bits":73,"bytes":"00 09 4C 4F 56 5F 44 52 70","crc":"ok","cmd":"RD_VOL","data":2304,"cell":9}
+{"t":"frame","ms":16692,"idx":98,"dir":"BATT","dir_mv":390,"bits":73,"bytes":"64 01 4C 4F 56 5F 44 52 75","crc":"ok","cmd":"RD_VOL","data":356,"v_cv":356}
+{"t":"frame","ms":16753,"idx":99,"dir":"TOOL","dir_mv":53,"bits":73,"bytes":"00 0A 4C 4F 56 5F 44 52 37","crc":"ok","cmd":"RD_VOL","data":2560,"cell":10}
+{"t":"frame","ms":16849,"idx":100,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":16912,"idx":101,"dir":"TOOL","dir_mv":48,"bits":73,"bytes":"00 0B 4C 4F 56 5F 44 52 0A","crc":"ok","cmd":"RD_VOL","data":2816,"cell":11}
+{"t":"frame","ms":17008,"idx":102,"dir":"BATT","dir_mv":400,"bits":73,"bytes":"61 01 4C 4F 56 5F 44 52 23","crc":"ok","cmd":"RD_VOL","data":353,"v_cv":353}
+{"t":"frame","ms":17071,"idx":103,"dir":"TOOL","dir_mv":68,"bits":73,"bytes":"00 0C 4C 4F 56 5F 44 52 B9","crc":"ok","cmd":"RD_VOL","data":3072,"cell":12}
+{"t":"frame","ms":17167,"idx":104,"dir":"BATT","dir_mv":405,"bits":73,"bytes":"64 01 4C 4F 56 5F 44 52 75","crc":"ok","cmd":"RD_VOL","data":356,"v_cv":356}
+{"t":"frame","ms":17228,"idx":105,"dir":"TOOL","dir_mv":73,"bits":73,"bytes":"00 0D 4C 4F 56 5F 44 52 84","crc":"ok","cmd":"RD_VOL","data":3328,"cell":13}
+{"t":"frame","ms":17325,"idx":106,"dir":"BATT","dir_mv":390,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"evt","ms":17826,"evt":"long_low","dur_us":500364}
+{"t":"frame","ms":18260,"idx":107,"dir":"BATT","dir_mv":405,"bits":40,"bytes":"AA 19 46 56 41","crc":"ok","cmd":"ID"}
+{"t":"frame","ms":18442,"idx":108,"dir":"BATT","dir_mv":390,"bits":40,"bytes":"AA 19 46 56 41","crc":"ok","cmd":"ID"}
+{"t":"frame","ms":18516,"idx":109,"dir":"BATT","dir_mv":390,"bits":73,"bytes":"00 00 5F 54 52 41 54 53 B0","crc":"ok","cmd":"START_","data":0}
+{"t":"frame","ms":18576,"idx":110,"dir":"TOOL","dir_mv":68,"bits":73,"bytes":"00 00 54 53 55 4A 44 41 93","crc":"ok","cmd":"ADJUST","data":0}
+{"t":"frame","ms":18663,"idx":111,"dir":"BATT","dir_mv":400,"bits":73,"bytes":"00 00 54 53 55 4A 44 41 93","crc":"ok","cmd":"ADJUST","data":0,"gen":1}
+{"t":"frame","ms":18724,"idx":112,"dir":"TOOL","dir_mv":73,"bits":73,"bytes":"00 00 4C 4F 56 5F 44 52 BC","crc":"ok","cmd":"RD_VOL","data":0,"cell":0}
+{"t":"frame","ms":18857,"idx":113,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"frame","ms":18919,"idx":114,"dir":"TOOL","dir_mv":73,"bits":73,"bytes":"00 01 4C 4F 56 5F 44 52 81","crc":"ok","cmd":"RD_VOL","data":256,"cell":1}
+{"t":"frame","ms":19051,"idx":115,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":19112,"idx":116,"dir":"TOOL","dir_mv":43,"bits":73,"bytes":"00 02 4C 4F 56 5F 44 52 C6","crc":"ok","cmd":"RD_VOL","data":512,"cell":2}
+{"t":"frame","ms":19245,"idx":117,"dir":"BATT","dir_mv":400,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":19307,"idx":118,"dir":"TOOL","dir_mv":63,"bits":73,"bytes":"00 03 4C 4F 56 5F 44 52 FB","crc":"ok","cmd":"RD_VOL","data":768,"cell":3}
+{"t":"frame","ms":19439,"idx":119,"dir":"BATT","dir_mv":400,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"frame","ms":19503,"idx":120,"dir":"TOOL","dir_mv":73,"bits":73,"bytes":"00 04 4C 4F 56 5F 44 52 48","crc":"ok","cmd":"RD_VOL","data":1024,"cell":4}
+{"t":"frame","ms":19635,"idx":121,"dir":"BATT","dir_mv":385,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"frame","ms":19697,"idx":122,"dir":"TOOL","dir_mv":68,"bits":73,"bytes":"00 05 4C 4F 56 5F 44 52 75","crc":"ok","cmd":"RD_VOL","data":1280,"cell":5}
+{"t":"frame","ms":19829,"idx":123,"dir":"BATT","dir_mv":405,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":19892,"idx":124,"dir":"TOOL","dir_mv":58,"bits":73,"bytes":"00 06 4C 4F 56 5F 44 52 32","crc":"ok","cmd":"RD_VOL","data":1536,"cell":6}
+{"t":"frame","ms":20024,"idx":125,"dir":"BATT","dir_mv":405,"bits":73,"bytes":"64 01 4C 4F 56 5F 44 52 75","crc":"ok","cmd":"RD_VOL","data":356,"v_cv":356}
+{"t":"frame","ms":20087,"idx":126,"dir":"TOOL","dir_mv":43,"bits":73,"bytes":"00 07 4C 4F 56 5F 44 52 0F","crc":"ok","cmd":"RD_VOL","data":1792,"cell":7}
+{"t":"frame","ms":20184,"idx":127,"dir":"BATT","dir_mv":400,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":20246,"idx":128,"dir":"TOOL","dir_mv":73,"bits":73,"bytes":"00 08 4C 4F 56 5F 44 52 4D","crc":"ok","cmd":"RD_VOL","data":2048,"cell":8}
+{"t":"frame","ms":20342,"idx":129,"dir":"BATT","dir_mv":390,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"frame","ms":20404,"idx":130,"dir":"TOOL","dir_mv":53,"bits":73,"bytes":"00 09 4C 4F 56 5F 44 52 70","crc":"ok","cmd":"RD_VOL","data":2304,"cell":9}
+{"t":"frame","ms":20499,"idx":131,"dir":"BATT","dir_mv":405,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":20562,"idx":132,"dir":"TOOL","dir_mv":58,"bits":73,"bytes":"00 0A 4C 4F 56 5F 44 52 37","crc":"ok","cmd":"RD_VOL","data":2560,"cell":10}
+{"t":"frame","ms":20659,"idx":133,"dir":"BATT","dir_mv":395,"bits":73,"bytes":"63 01 4C 4F 56 5F 44 52 A5","crc":"ok","cmd":"RD_VOL","data":355,"v_cv":355}
+{"t":"frame","ms":20721,"idx":134,"dir":"TOOL","dir_mv":63,"bits":73,"bytes":"00 0B 4C 4F 56 5F 44 52 0A","crc":"ok","cmd":"RD_VOL","data":2816,"cell":11}
+{"t":"frame","ms":20817,"idx":135,"dir":"BATT","dir_mv":405,"bits":73,"bytes":"61 01 4C 4F 56 5F 44 52 23","crc":"ok","cmd":"RD_VOL","data":353,"v_cv":353}
+{"t":"frame","ms":20880,"idx":136,"dir":"TOOL","dir_mv":58,"bits":73,"bytes":"00 0C 4C 4F 56 5F 44 52 B9","crc":"ok","cmd":"RD_VOL","data":3072,"cell":12}
+{"t":"frame","ms":20976,"idx":137,"dir":"BATT","dir_mv":405,"bits":73,"bytes":"62 01 4C 4F 56 5F 44 52 E6","crc":"ok","cmd":"RD_VOL","data":354,"v_cv":354}
+{"t":"frame","ms":21038,"idx":138,"dir":"TOOL","dir_mv":58,"bits":73,"bytes":"00 0D 4C 4F 56 5F 44 52 84","crc":"ok","cmd":"RD_VOL","data":3328,"cell":13}
