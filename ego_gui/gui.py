@@ -17,8 +17,8 @@ import datetime
 import sys
 from pathlib import Path
 
-from PySide6.QtCore import QTimer
-from PySide6.QtGui import QColor
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QColor, QIcon, QPainter, QPixmap
 from PySide6.QtWidgets import (
     QApplication,
     QCheckBox,
@@ -369,8 +369,44 @@ class MainWindow(QMainWindow):
         self.charge_panel.update_from(self.state)
 
 
+def _make_app_icon() -> QIcon:
+    icon = QIcon()
+    for size in (16, 32, 48, 64, 128, 256):
+        px = QPixmap(size, size)
+        px.fill(Qt.GlobalColor.transparent)
+        p = QPainter(px)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
+        s = size
+        nub_w = max(2, s // 6)
+        nub_h = max(2, s // 8)
+        body_x = max(1, s // 10)
+        body_y = nub_h
+        body_w = s - body_x * 2 - nub_w
+        body_h = s - body_y - max(1, s // 10)
+        nub_x = body_x + body_w
+        nub_y = body_y + (body_h // 2 - nub_h // 2)
+        # Body outline
+        p.setBrush(QColor("#2e2e2e"))
+        p.setPen(Qt.PenStyle.NoPen)
+        p.drawRoundedRect(body_x, body_y, body_w, body_h, s // 12, s // 12)
+        # Green fill (~75%)
+        fill_margin = max(1, s // 16)
+        fill_w = int((body_w - fill_margin * 2) * 0.75)
+        p.setBrush(QColor("#4caf50"))
+        p.drawRoundedRect(body_x + fill_margin, body_y + fill_margin,
+                          fill_w, body_h - fill_margin * 2, s // 16, s // 16)
+        # Nub
+        p.setBrush(QColor("#2e2e2e"))
+        p.drawRoundedRect(nub_x, nub_y, nub_w, nub_h, 1, 1)
+        p.end()
+        icon.addPixmap(px)
+    return icon
+
+
 def main() -> int:
     app = QApplication(sys.argv)
+    icon = _make_app_icon()
+    app.setWindowIcon(icon)
     w = MainWindow()
     w.show()
     return app.exec()
